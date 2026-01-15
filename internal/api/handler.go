@@ -25,8 +25,9 @@ func NewHandler(database *db.DB, k8sClient *k8s.Client) http.Handler {
 		mux:       http.NewServeMux(),
 	}
 
-	// Health check
+	// Health check (both paths for internal probes and external ingress access)
 	h.mux.HandleFunc("GET /healthz", h.Healthz)
+	h.mux.HandleFunc("GET /compute/healthz", h.Healthz)
 
 	// Container endpoints
 	h.mux.HandleFunc("GET /compute/containers", h.authMiddleware(h.ListContainers))
